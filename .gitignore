@@ -4,3 +4,5 @@ _server/
 _client/
 local/
 .ocp-indent
+
+_opam/

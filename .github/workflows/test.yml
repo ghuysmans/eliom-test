@@ -1,0 +1,40 @@
+name: Test
+on: push
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        ocaml-version:
+          - 4.13.1
+        lib-version:
+          - 6.8.0 #ok
+          - 6.8.1
+          - 6.9.1
+          - 6.9.2
+          - 6.9.3
+          - 6.10.1
+          - 6.11.0
+          - 6.12.0
+          - 6.12.1
+          - 6.12.4
+          - 6.13.1
+          - 7.0.0
+          - 8.4.8
+          - 8.6.0 #ok
+          - 8.8.0
+          - 8.8.1 #ok
+          - 8.9.0 #fail
+          - 9.0.0 #fail
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use OCaml ${{ matrix.ocaml-version }}
+        uses: avsm/setup-ocaml@v1
+        with:
+          ocaml-version: ${{ matrix.ocaml-version }}
+      - run: opam install eliom.${{ matrix.lib-version }}
+      - run: opam exec -- eliomc -ppx -infer mini.eliom
