@@ -25,5 +25,6 @@ jobs:
         uses: avsm/setup-ocaml@v1
         with:
           ocaml-version: ${{ matrix.ocaml-version }}
+      - run: sudo apt-get install libgdbm-dev
       - run: opam install eliom.${{ matrix.lib-version }}
       - run: opam exec -- eliomc -ppx -infer mini.eliom
