@@ -39,3 +39,5 @@ let () =
               ]] [txt "Click me!"];
               status;
             ])))
+
+let () = exit 0

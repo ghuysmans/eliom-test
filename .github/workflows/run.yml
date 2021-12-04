@@ -1,0 +1,31 @@
+name: Run
+on: push
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        ocaml-version:
+          - 4.12.0
+        eliom-version:
+          - 8.8.1
+        server-version:
+          - 4.0.2
+          - 5.0.0
+        config-version:
+          - old.conf.in
+          - new.conf.in
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use OCaml ${{ matrix.ocaml-version }}
+        uses: avsm/setup-ocaml@v1
+        with:
+          ocaml-version: ${{ matrix.ocaml-version }}
+      - run: sudo apt-get install libsqlite3-dev
+      - run: opam install sqlite3 ocsigenserver.${{ matrix.server-version }} eliom.${{ matrix.eliom-version }}
+      - run: cp ${{ matrix.config-version }} test.conf.in
+      - run: opam exec -- make test.byte
